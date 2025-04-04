@@ -117,6 +117,13 @@ require("lazy").setup({
 			pcall(require("telescope").load_extension, "ui-select")
 			-- See `:help telescope.builtin`
 			local builtin = require("telescope.builtin")
+			vim.keymap.set("n", "<leader>sa", function()
+				local home_dir = vim.fn.expand("~/Koodaus/")
+				builtin.find_files({
+					cwd = home_dir,
+					previewer = false,
+				})
+			end, { desc = "[S]earch [A]ll files /" })
 			vim.keymap.set("n", "<leader>sh", builtin.help_tags, { desc = "[S]earch [H]elp" })
 			vim.keymap.set("n", "<leader>sk", builtin.keymaps, { desc = "[S]earch [K]eymaps" })
 			vim.keymap.set("n", "<leader>sf", builtin.find_files, { desc = "[S]earch [F]iles" })
@@ -378,7 +385,7 @@ require("lazy").setup({
 			local ensure_installed = vim.tbl_keys(servers or {})
 			vim.list_extend(ensure_installed, {
 				"stylua", -- Used to format Lua code
-				"clang-format",
+				--"clang-format",
 			})
 			require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
@@ -398,10 +405,23 @@ require("lazy").setup({
 			})
 		end,
 	},
+	-- C formatter for 42 school
+	{
+		"Diogo-ss/42-C-Formatter.nvim",
+		cmd = "CFormat42",
+		config = function()
+			local formatter = require("42-formatter")
+			formatter.setup({
+				formatter = "c_formatter_42",
+				filetypes = { c = true, h = true, cpp = true, hpp = true },
+			})
+		end,
+	},
 	{ -- Autoformat
 		"stevearc/conform.nvim",
 		event = { "BufWritePre" },
 		cmd = { "ConformInfo" },
+		--[[ MOVED THIS TO KEYMAPS
 		keys = {
 			{
 				"<leader>f",
@@ -412,6 +432,7 @@ require("lazy").setup({
 				desc = "[F]ormat buffer",
 			},
 		},
+      ]]
 		opts = {
 			notify_on_error = false,
 			format_on_save = function(bufnr)
@@ -432,7 +453,7 @@ require("lazy").setup({
 			end,
 			formatters_by_ft = {
 				lua = { "stylua" },
-				c = { "clang-format" },
+				-- c = { "clang-format" },
 				-- Conform can also run multiple formatters sequentially
 				-- python = { "isort", "black" },
 				--

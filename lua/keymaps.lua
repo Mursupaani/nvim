@@ -16,6 +16,9 @@ vim.keymap.set("n", "k", "gk")
 vim.keymap.set("i", "qq", "<Esc>")
 vim.keymap.set("v", "qq", "<Esc>")
 vim.keymap.set("n", "qq", "<Esc>")
+vim.keymap.set("i", "QQ", "<Esc>")
+vim.keymap.set("v", "QQ", "<Esc>")
+vim.keymap.set("n", "QQ", "<Esc>")
 vim.keymap.set("i", ";;", "<Esc>")
 vim.keymap.set("v", ";;", "<Esc>")
 vim.keymap.set("n", ";;", "<Esc>")
@@ -48,3 +51,18 @@ vim.keymap.set(
 	"<cmd>Telescope buffers sort_mru=true sort_lastused=true initial_mode=normal theme=ivy<cr>",
 	{ desc = "Open telescope [B]uffers" }
 )
+
+--vim.api.nvim_set_keymap("n", "<F2>", ":CFormat42<CR>", { noremap = true, silent = true })
+
+vim.keymap.set({ "n", "v" }, "<leader>f", function()
+	-- Format file based on filetype
+	-- ft = current FILETYPE
+	local ft = vim.bo.filetype
+	if ft == "c" or ft == "cpp" or ft == "h" or ft == "hpp" then
+		vim.print("Formatted with CFormat42")
+		vim.cmd("CFormat42")
+	else
+		vim.print("Formatted with Conform")
+		require("conform").format({ async = true, lsp_fallback = true })
+	end
+end, { desc = "[F]ormat buffer" })
