@@ -54,6 +54,7 @@ vim.keymap.set(
 
 --vim.api.nvim_set_keymap("n", "<F2>", ":CFormat42<CR>", { noremap = true, silent = true })
 
+--[[
 vim.keymap.set({ "n", "v" }, "<leader>f", function()
 	-- Format file based on filetype
 	-- ft = current FILETYPE
@@ -66,3 +67,5 @@ vim.keymap.set({ "n", "v" }, "<leader>f", function()
 		require("conform").format({ async = true, lsp_fallback = true })
 	end
 end, { desc = "[F]ormat buffer" })
+]]
+--
