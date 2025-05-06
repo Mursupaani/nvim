@@ -5,6 +5,7 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
 -- Map keys
+vim.keymap.set("i", "<C-i>", "")
 vim.keymap.set("v", "§", "q")
 vim.keymap.set("n", "§", "q")
 vim.keymap.set("n", "q", "")
@@ -22,6 +23,14 @@ vim.keymap.set("n", "QQ", "<Esc>")
 vim.keymap.set("i", ";;", "<Esc>")
 vim.keymap.set("v", ";;", "<Esc>")
 vim.keymap.set("n", ";;", "<Esc>")
+vim.keymap.set("n", "<M-n>", "<Left>")
+vim.keymap.set("n", "<M-i>", "<Right>")
+vim.keymap.set("n", "<M-u>", "<Up>")
+vim.keymap.set("n", "<M-e>", "<Down>")
+vim.keymap.set("i", "<M-n>", "<Left>")
+vim.keymap.set("i", "<M-i>", "<Right>")
+vim.keymap.set("i", "<M-u>", "<Up>")
+vim.keymap.set("i", "<M-e>", "<Down>")
 
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 vim.keymap.set("n", "qq", "<cmd>nohlsearch<CR>")
