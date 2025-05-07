@@ -10,6 +10,7 @@ vim.g.have_nerd_font = true
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.statuscolumn = "%s %l %r "
+--vim.opt.statuscolumn = [[%!printf('%-4d|%d', v:lnum, v:lnum == line('.') ? 0 : abs(v:lnum - line('.')))]]
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = "a"
