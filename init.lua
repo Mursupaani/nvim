@@ -106,6 +106,36 @@ require("lazy").setup({
 			-- See `:help telescope` and `:help telescope.setup()`
 			--  All the info you're looking for is in `:help telescope.setup()`
 			require("telescope").setup({
+				pickers = {
+					buffers = {
+						mappings = {
+							n = {
+								["d"] = function(prompt_bufnr)
+									local actions = require("telescope.actions")
+									local action_state = require("telescope.actions.state")
+									local selected = action_state.get_selected_entry() -- Get the selected buffer entry
+									local bufnr = selected.bufnr -- Extract buffer number
+
+									-- Check how many listed buffers are open
+									if #vim.fn.getbufinfo({ buflisted = 1 }) <= 1 then
+										-- If this is the last buffer, show a warning and close Telescope
+										vim.notify("Can't delete the last buffer", vim.log.levels.WARN)
+										actions.close(prompt_bufnr)
+										return
+									end
+
+									-- If not the last buffer, force delete the selected buffer
+									vim.api.nvim_buf_delete(bufnr, { force = true })
+
+									-- Refresh after deletion
+									vim.cmd(
+										[[Telescope buffers sort_mru=true sort_lastused=true initial_mode=normal theme=ivy]]
+									)
+								end,
+							},
+						},
+					},
+				},
 				extensions = {
 					["ui-select"] = {
 						require("telescope.themes").get_dropdown(),
