@@ -628,8 +628,33 @@ require("lazy").setup({
 		config = function()
 			---@diagnostic disable-next-line: missing-fields
 			require("tokyonight").setup({
+				transparent_background = true,
+				transparent = true,
+				terminal_colors = true,
+				devicons = true,
 				styles = {
-					comments = { italic = false }, -- Disable italics in comments
+					comment = { italic = true },
+					keyword = { italic = true },
+					type = { italic = true },
+					storageclass = { italic = true },
+					structure = { italic = true },
+					parameter = { italic = true },
+					annotation = { italic = true },
+					tag_attribute = { italic = true },
+				},
+				filter = "pro",
+				inc_search = "background",
+				background_clear = {
+					"float_win",
+					"toggleterm",
+					"telescope",
+					"which-key",
+					"renamer",
+					"notify",
+					"nvim-tree",
+					"bufferline",
+					"treesitter-context",
+					"neo-tree",
 				},
 			})
 
@@ -637,6 +662,7 @@ require("lazy").setup({
 			-- Like many other themes, this one has different styles, and you could load
 			-- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
 			vim.cmd.colorscheme("tokyonight-night")
+			-- Enable transparency
 		end,
 	},
 

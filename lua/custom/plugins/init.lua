@@ -26,4 +26,7 @@ return {
 	{
 		"mfussenegger/nvim-dap",
 	},
+	{
+		"m4xshen/autoclose.nvim",
+	},
 }
