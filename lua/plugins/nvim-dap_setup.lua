@@ -84,7 +84,6 @@ return {
 				vim.keymap.set("n", "<leader>dq", function()
 					dap.terminate()
 					ui.close()
-					virtual_text.disable()
 				end, { desc = "[D]ebug [Q]uit DAP session" })
 				vim.keymap.set("n", "<space>dc", function()
 					require("dap").clear_breakpoints()
@@ -109,15 +108,19 @@ return {
 
 				dap.listeners.before.attach.dapui_config = function()
 					ui.open()
+					virtual_text.enable()
 				end
 				dap.listeners.before.launch.dapui_config = function()
 					ui.open()
+					virtual_text.enable()
 				end
 				dap.listeners.before.event_terminated.dapui_config = function()
 					ui.close()
+					virtual_text.disable()
 				end
 				dap.listeners.before.event_exited.dapui_config = function()
 					ui.close()
+					virtual_text.disable()
 				end
 			end,
 		},
@@ -140,50 +143,45 @@ return {
 							stopOnEntry = false,
 							-- NOTE: MAC setup:
 							-- program = function()
-							--   -- Build with debug symbols
-							--   -- local out = vim.fn.system({ "make", "debug" })
-							--   local out = vim.fn.system { 'make', 're' }
-							--   -- Check for errors
-							--   if vim.v.shell_error ~= 0 then
-							--     vim.notify(out, vim.log.levels.ERROR)
-							--     return nil
-							--   end
-							--   -- Return path to the debuggable program
-							--   return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
-							--   -- return "path/to/executable"
+							-- 	-- Build with debug symbols
+							-- 	-- local out = vim.fn.system({ "make", "debug" })
+							-- 	local out = vim.fn.system({ "make", "re" })
+							-- 	-- Check for errors
+							-- 	if vim.v.shell_error ~= 0 then
+							-- 		vim.notify(out, vim.log.levels.ERROR)
+							-- 		return nil
+							-- 	end
+							-- 	-- Return path to the debuggable program
+							-- 	return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+							-- 	-- return "path/to/executable"
 							-- end,
 							-- NOTE: MAC setup ^^
 
+							-- NOTE: LINUX setup:
 							program = function()
-								local cwd = vim.fn.getcwd()
-
-								-- Step 1: Build
+								-- Run the build system (adjust as needed)
 								local out = vim.fn.system({ "make", "re" })
 								if vim.v.shell_error ~= 0 then
 									vim.notify(out, vim.log.levels.ERROR)
 									return nil
 								end
 
-								-- Step 2: Try to find an executable (file command must say ELF)
-								local scan_cmd =
-									[[find "%s" -type f -executable -exec file {} \; | grep -i 'ELF' | cut -d: -f1 | head -n1]]
-								local cmd = string.format(scan_cmd, cwd)
-								local handle = io.popen(cmd)
-								if not handle then
-									vim.notify("Failed to scan for executables", vim.log.levels.ERROR)
-									return nil
-								end
+								-- Find the most recently modified executable file
+								local cwd = vim.fn.getcwd()
+								local find_cmd =
+									[[find %s -type f -executable -printf '%%T@ %%p\n' | sort -nr | head -n1 | cut -d' ' -f2-]]
+								local find_exe_cmd = string.format(find_cmd, vim.fn.shellescape(cwd))
 
-								local exe = handle:read("*l")
-								handle:close()
+								local exe = vim.fn.systemlist(find_exe_cmd)[1]
 
 								if not exe or exe == "" then
-									vim.notify("No valid ELF executable found in workspace", vim.log.levels.ERROR)
+									vim.notify("No executable found in project directory", vim.log.levels.ERROR)
 									return nil
 								end
 
 								return exe
 							end,
+							-- NOTE: LINUX setup ^^
 
 							args = function()
 								if last_args then
@@ -204,13 +202,6 @@ return {
 								last_args = vim.fn.split(input, " ", true)
 								return last_args
 							end,
-							setupCommands = {
-								{
-									text = "breakpoint set --name main",
-									description = "Set breakpoint at main",
-									ignoreFailures = false,
-								},
-							},
 						},
 					},
 				},
