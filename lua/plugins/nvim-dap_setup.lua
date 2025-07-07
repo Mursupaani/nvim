@@ -2,6 +2,43 @@
 
 local last_args = nil
 
+local function shell_split(input)
+	local args = {}
+	local i = 1
+	while i <= #input do
+		-- Skip whitespace
+		while i <= #input and input:sub(i, i):match("%s") do
+			i = i + 1
+		end
+
+		if i > #input then
+			break
+		end
+
+		local c = input:sub(i, i)
+		local arg = ""
+
+		if c == '"' then
+			-- Parse quoted string
+			i = i + 1
+			while i <= #input and input:sub(i, i) ~= '"' do
+				arg = arg .. input:sub(i, i)
+				i = i + 1
+			end
+			i = i + 1 -- skip closing quote
+		else
+			-- Parse unquoted string
+			while i <= #input and not input:sub(i, i):match("%s") do
+				arg = arg .. input:sub(i, i)
+				i = i + 1
+			end
+		end
+
+		table.insert(args, arg)
+	end
+	return args
+end
+
 return {
 	{
 		"mfussenegger/nvim-dap",
@@ -199,7 +236,7 @@ return {
 								if input == "" then
 									return {}
 								end
-								last_args = vim.fn.split(input, " ", true)
+								last_args = shell_split(input)
 								return last_args
 							end,
 						},
