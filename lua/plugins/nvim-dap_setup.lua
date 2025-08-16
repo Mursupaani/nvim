@@ -197,7 +197,7 @@ return {
 							-- NOTE: LINUX setup:
 							program = function()
 								-- Run the build system (adjust as needed)
-								local out = vim.fn.system({ "make", "re" })
+								local out = vim.fn.system({ "compiledb", "make", "re" })
 								if vim.v.shell_error ~= 0 then
 									vim.notify(out, vim.log.levels.ERROR)
 									return nil
