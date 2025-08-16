@@ -71,3 +71,6 @@ vim.opt.shiftwidth = 4
 
 -- Enable visual block mode to extend past ends of lines
 vim.opt.virtualedit = "block"
+
+-- Window border
+vim.opt.winborder = "rounded"
