@@ -166,7 +166,7 @@ return {
 		"julianolf/nvim-dap-lldb",
 
 		dependencies = { "mfussenegger/nvim-dap" },
-		opts = { codelldb_path = "/path/to/codelldb" },
+		opts = { codelldb_path = "codelldb" },
 		config = function()
 			local cfg = {
 				configurations = {
@@ -174,7 +174,7 @@ return {
 					c = {
 						{
 							name = "Launch debugger",
-							type = "lldb",
+							type = "codelldb",
 							request = "launch",
 							cwd = "${workspaceFolder}",
 							stopOnEntry = false,
@@ -241,9 +241,10 @@ return {
 							end,
 
 							-- Debug child processes
-							initCommands = {
-								"settings set target.process.follow-fork-mode child",
-							},
+							-- initCommands = {
+							-- 	"settings set target.process.follow-fork-mode child",
+							-- 	"process handle SIGTRAP -n true -p true -s false",
+							-- },
 						},
 					},
 				},
