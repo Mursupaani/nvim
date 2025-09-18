@@ -192,12 +192,12 @@ return {
 							-- 	return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
 							-- 	-- return "path/to/executable"
 							-- end,
-							-- NOTE: MAC setup ^^
-
+							-- -- NOTE: MAC setup ^^
+							--
 							-- NOTE: LINUX setup:
 							program = function()
 								-- Run the build system (adjust as needed)
-								local out = vim.fn.system({ "compiledb", "make", "re" })
+								local out = vim.fn.system({ "make", "re" })
 								if vim.v.shell_error ~= 0 then
 									vim.notify(out, vim.log.levels.ERROR)
 									return nil
@@ -239,6 +239,11 @@ return {
 								last_args = shell_split(input)
 								return last_args
 							end,
+
+							-- Debug child processes
+							initCommands = {
+								"settings set target.process.follow-fork-mode child",
+							},
 						},
 					},
 				},
