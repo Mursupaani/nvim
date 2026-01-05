@@ -33,6 +33,7 @@ require("lazy").setup({
 	require("plugins.nvim-dap_setup"),
 	require("plugins.42-header_setup"),
 	require("plugins.neo-tree"),
+	require("plugins.inc-rename"),
 }, {
 	ui = {
 		-- If you are using a Nerd Font: set icons to an empty table which will use the

@@ -3,6 +3,16 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
 -- Map keys
+--
+-- Force Tab to insert a tab character (or spaces) and ignore snippet jumps
+vim.keymap.set("i", "<Tab>", "<Tab>", { noremap = true })
+
+vim.keymap.set(
+	"n",
+	"<C-c>",
+	"<Nop>",
+	{ noremap = true, silent = true, desc = "Prevent quitting on Ctrl-C during debug" }
+)
 vim.keymap.set("v", "§", "q")
 vim.keymap.set("n", "§", "q")
 vim.keymap.set("n", "q", "")

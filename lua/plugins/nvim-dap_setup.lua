@@ -98,7 +98,7 @@ return {
 
 			require("dapui").setup()
 			virtual_text.setup({
-				enabled = true,
+				enabled = false,
 				enable_commands = true,
 				highlight_changed_variables = true,
 				highlight_new_as_changed = true,
@@ -342,7 +342,10 @@ return {
 					miDebuggerPath = "gdb",
 					args = get_args,
 					setupCommands = {
-						-- { text = "set detach-on-fork off", description = "Keep parent alive after fork" },
+						{
+							text = "handle SIGINT stop print pass",
+							description = "Stop and show SIGINT, but deliver to program",
+						},
 						{ text = "set follow-fork-mode parent", description = "Stay on parent after fork" },
 						{ text = "set pagination off", description = "Disable GDB pagination" },
 						{
@@ -350,6 +353,7 @@ return {
 							description = "Enable non-stop mode for multi-process debugging",
 							ignoreFailures = true,
 						},
+						{ text = "set target-async on" },
 					},
 				},
 				{
@@ -363,6 +367,10 @@ return {
 					miDebuggerPath = "gdb",
 					args = get_args,
 					setupCommands = {
+						{
+							text = "handle SIGINT stop print pass",
+							description = "Stop and show SIGINT, deliver to program",
+						},
 						{ text = "set detach-on-fork off", description = "Keep parent alive after fork" },
 						{ text = "set follow-fork-mode child", description = "Follow child after fork" },
 						{ text = "set pagination off", description = "Disable GDB pagination" },
@@ -371,6 +379,7 @@ return {
 							description = "Enable non-stop mode for multi-process debugging",
 							ignoreFailures = true,
 						},
+						{ text = "set target-async on" },
 					},
 				},
 				{
@@ -384,6 +393,10 @@ return {
 					miDebuggerPath = "gdb",
 					args = get_args,
 					setupCommands = {
+						{
+							text = "handle SIGINT stop print pass",
+							description = "Stop and show SIGINT, deliver to program",
+						},
 						{ text = "set detach-on-fork off", description = "Keep parent alive after fork" },
 						{ text = "set follow-fork-mode parent", description = "Stay on parent after fork" },
 						{ text = "set pagination off", description = "Disable GDB pagination" },
@@ -392,6 +405,7 @@ return {
 							description = "Enable non-stop mode for multi-process debugging",
 							ignoreFailures = true,
 						},
+						{ text = "set target-async on" },
 					},
 				},
 				{
@@ -405,6 +419,10 @@ return {
 					miDebuggerPath = "gdb",
 					args = get_args,
 					setupCommands = {
+						{
+							text = "handle SIGINT stop print pass",
+							description = "Stop and show SIGINT, deliver to program",
+						},
 						{ text = "set detach-on-fork off", description = "Keep parent alive after fork" },
 						{ text = "set follow-fork-mode child", description = "Follow child after fork" },
 						{ text = "set pagination off", description = "Disable GDB pagination" },
@@ -413,6 +431,7 @@ return {
 							description = "Enable non-stop mode for multi-process debugging",
 							ignoreFailures = true,
 						},
+						{ text = "set target-async on" },
 					},
 				},
 				{
@@ -493,6 +512,19 @@ return {
 					enter = false,
 				})
 			end, { desc = "[D]ebug evaluate [V]ariable under cursor" })
+
+			-- Send SIGINT to the debugged process
+			vim.keymap.set("n", "<leader>dI", function()
+				local session = dap.session()
+				if not session then
+					vim.notify("No active debug session", vim.log.levels.WARN)
+					return
+				end
+				session:request("execCommand", {
+					command = "signal",
+					arguments = { "SIGINT" },
+				})
+			end, { desc = "Send SIGINT to debugged process" })
 
 			vim.keymap.set("n", "<F6>", dap.continue)
 			vim.keymap.set("n", "<F7>", dap.step_into)
